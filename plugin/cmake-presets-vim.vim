@@ -5,7 +5,6 @@ func! DetectCMakePreset()
   if ! filereadable("CMakeUserPresets.json")
     return 0
   endif
-
   let preset_file_content = readfile("CMakeUserPresets.json")
   if empty(preset_file_content)
     return 0
@@ -14,6 +13,10 @@ func! DetectCMakePreset()
   if empty(preset_file_json)
     return 0
   endif
+  if ! has_key(preset_file_json.configurePresets[0], "binaryDir")
+    return 0
+  endif
+
   let raw_binary_dir = preset_file_json.configurePresets[0].binaryDir
   let binary_dir = substitute(raw_binary_dir, "${sourceDir}", getcwd(), "")
 
